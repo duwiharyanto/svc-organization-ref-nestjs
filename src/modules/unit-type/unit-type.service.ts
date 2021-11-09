@@ -22,15 +22,15 @@ export class UnitTypeService {
     };
   }
 
-  async readUnitType(id?: string): Promise<any> {
-    if (id) {
-      const unitType = await this.unitTypeRepository.findOne(id);
+  async readUnitType(uuid?: string): Promise<any> {
+    if (uuid) {
+      const unitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
       if (unitType) {
         return { 
           data: [unitType] 
         };
       }
-      throw new UnitTypeNotFoundException(id);
+      throw new UnitTypeNotFoundException(uuid);
     } else {
       const unitTypes = await this.unitTypeRepository.find();
       const unitTypesCount = await this.unitTypeRepository.count();
@@ -41,22 +41,24 @@ export class UnitTypeService {
     }
   }
 
-  async updateUnitType(id: string, unitType: UpdateUnitTypeDto | StatusDataDto): Promise<any> {
-    await this.unitTypeRepository.update(id, unitType);
-    const updatedUnitType = await this.unitTypeRepository.findOne(id);
+  async updateUnitType(uuid: string, unitType: UpdateUnitTypeDto | StatusDataDto): Promise<any> {
+    const findUnitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
+    await this.unitTypeRepository.update(findUnitType.id, unitType);
+    const updatedUnitType = await this.unitTypeRepository.findOne(findUnitType.id);
     if (updatedUnitType) {
       return {
         message: 'Data berhasil diubah',
         data: [updatedUnitType]
       };
     }
-    throw new UnitTypeNotFoundException(id);
+    throw new UnitTypeNotFoundException(uuid);
   }
 
-  async deleteUnitType(id: string): Promise<void> {
-    const deleteResponse = await this.unitTypeRepository.softDelete(id);
+  async deleteUnitType(uuid: string): Promise<void> {
+    const findUnitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
+    const deleteResponse = await this.unitTypeRepository.softDelete(findUnitType.id);
     if (!deleteResponse.affected) {
-      throw new UnitTypeNotFoundException(id);
+      throw new UnitTypeNotFoundException(uuid);
     }
   }
 }

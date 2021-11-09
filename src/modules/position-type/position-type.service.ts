@@ -23,15 +23,15 @@ export class PositionTypeService {
     };
   }
 
-  async readPositionType(id?: string): Promise<any> {
-    if (id) {
-      const positionType = await this.positionTypeRepository.findOne(id);
+  async readPositionType(uuid?: string): Promise<any> {
+    if (uuid) {
+      const positionType = await this.positionTypeRepository.findOne({where: {uuid: uuid}});
       if (positionType) {
         return { 
           data: [positionType] 
         };
       }
-      throw new PositionTypeNotFoundException(id);
+      throw new PositionTypeNotFoundException(uuid);
     } else {
       const positionTypes = await this.positionTypeRepository.find();
       const positionTypesCount = await this.positionTypeRepository.count();
@@ -42,22 +42,24 @@ export class PositionTypeService {
     }
   }
 
-  async updatePositionType(id: string, positionType: UpdatePositionTypeDto | StatusDataDto): Promise<any> {
-    await this.positionTypeRepository.update(id, positionType);
-    const updatedPositionType = await this.positionTypeRepository.findOne(id);
+  async updatePositionType(uuid: string, positionType: UpdatePositionTypeDto | StatusDataDto): Promise<any> {
+    const findPositionType = await this.positionTypeRepository.findOne({where: {uuid: uuid}});
+    await this.positionTypeRepository.update(findPositionType.id, positionType);
+    const updatedPositionType = await this.positionTypeRepository.findOne(findPositionType.id);
     if (updatedPositionType) {
       return {
         message: 'Data berhasil diubah',
         data: [updatedPositionType]
       };
     }
-    throw new PositionTypeNotFoundException(id);
+    throw new PositionTypeNotFoundException(uuid);
   }
 
-  async deletePositionType(id: string): Promise<void> {
-    const deleteResponse = await this.positionTypeRepository.softDelete(id);
+  async deletePositionType(uuid: string): Promise<void> {
+    const findPositionType = await this.positionTypeRepository.findOne({where: {uuid: uuid}});
+    const deleteResponse = await this.positionTypeRepository.softDelete(findPositionType.id);
     if (!deleteResponse.affected) {
-      throw new PositionTypeNotFoundException(id);
+      throw new PositionTypeNotFoundException(uuid);
     }
   }
 

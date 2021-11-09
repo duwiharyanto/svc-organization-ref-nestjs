@@ -23,15 +23,15 @@ export class LocationService {
     };
   }
 
-  async readLocation(id?: string): Promise<any> {
-    if (id) {
-      const location = await this.locationRepository.findOne(id);
+  async readLocation(uuid?: string): Promise<any> {
+    if (uuid) {
+      const location = await this.locationRepository.findOne({where: {uuid: uuid}});
       if (location) {
         return { 
           data: [location] 
         };
       }
-      throw new LocationNotFoundException(id);
+      throw new LocationNotFoundException(uuid);
     } else {
       const locations = await this.locationRepository.find();
       const locationsCount = await this.locationRepository.count();
@@ -42,22 +42,24 @@ export class LocationService {
     }
   }
 
-  async updateLocation(id: string, location: UpdateLocationDto | StatusDataDto): Promise<any> {
-    await this.locationRepository.update(id, location);
-    const updatedLocation = await this.locationRepository.findOne(id);
+  async updateLocation(uuid: string, location: UpdateLocationDto | StatusDataDto): Promise<any> {
+    const findLocation = await this.locationRepository.findOne({where: {uuid: uuid}});
+    await this.locationRepository.update(findLocation.id, location);
+    const updatedLocation = await this.locationRepository.findOne(findLocation.id);
     if (updatedLocation) {
       return {
         message: 'Data berhasil diubah',
         data: [updatedLocation]
       };
     }
-    throw new LocationNotFoundException(id);
+    throw new LocationNotFoundException(uuid);
   }
 
-  async deleteLocation(id: string): Promise<void> {
-    const deleteResponse = await this.locationRepository.softDelete(id);
+  async deleteLocation(uuid: string): Promise<void> {
+    const findLocation = await this.locationRepository.findOne({where: {uuid: uuid}});
+    const deleteResponse = await this.locationRepository.softDelete(findLocation.id);
     if (!deleteResponse.affected) {
-      throw new LocationNotFoundException(id);
+      throw new LocationNotFoundException(uuid);
     }
   }
 

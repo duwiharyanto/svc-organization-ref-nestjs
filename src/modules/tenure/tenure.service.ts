@@ -22,15 +22,15 @@ export class TenureService {
     };
   }
 
-  async readTenure(id?: string): Promise<any> {
-    if (id) {
-      const tenure = await this.tenureRepository.findOne(id);
+  async readTenure(uuid?: string): Promise<any> {
+    if (uuid) {
+      const tenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
       if (tenure) {
         return { 
           data: [tenure] 
         };
       }
-      throw new TenureNotFoundException(id);
+      throw new TenureNotFoundException(uuid);
     } else {
       const tenures = await this.tenureRepository.find();
       const tenuresCount = await this.tenureRepository.count();
@@ -41,22 +41,24 @@ export class TenureService {
     }
   }
 
-  async updateTenure(id: string, tenure: UpdateTenureDto | StatusDataDto): Promise<any> {
-    await this.tenureRepository.update(id, tenure);
-    const updatedTenure = await this.tenureRepository.findOne(id);
+  async updateTenure(uuid: string, tenure: UpdateTenureDto | StatusDataDto): Promise<any> {
+    const findTenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
+    await this.tenureRepository.update(findTenure.id, tenure);
+    const updatedTenure = await this.tenureRepository.findOne(findTenure.id);
     if (updatedTenure) {
       return {
         message: 'Data berhasil diubah',
         data: [updatedTenure]
       };
     }
-    throw new TenureNotFoundException(id);
+    throw new TenureNotFoundException(uuid);
   }
 
-  async deleteTenure(id: string): Promise<void> {
-    const deleteResponse = await this.tenureRepository.softDelete(id);
+  async deleteTenure(uuid: string): Promise<void> {
+    const findTenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
+    const deleteResponse = await this.tenureRepository.softDelete(findTenure.id);
     if (!deleteResponse.affected) {
-      throw new TenureNotFoundException(id);
+      throw new TenureNotFoundException(uuid);
     }
   }
   
