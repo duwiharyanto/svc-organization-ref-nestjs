@@ -1,17 +1,13 @@
-import { LocationModule } from './modules/location/location.module';
-import { UnitTypeModule } from './modules/unit-type/unit-type.module';
-import { TenureModule } from './modules/tenure/tenure.module';
-import { TenureController } from './modules/tenure/tenure.controller';
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseConnectionService } from './shared/services/database-connection.service';
-import { UnitTypeService } from './modules/unit-type/unit-type.service';
-import { UnitTypeController } from './modules/unit-type/unit-type.controller';
-import { UnitTypeEntity } from './modules/unit-type/unit-type.entity';
 import { PositionTypeModule } from './modules/position-type/position-type.module';
+import { LocationModule } from './modules/location/location.module';
+import { UnitTypeModule } from './modules/unit-type/unit-type.module';
+import { TenureModule } from './modules/tenure/tenure.module';
+import { ConfigurationService } from './shared/services/configuration.service';
 
 @Module({
   imports: [
@@ -24,6 +20,17 @@ import { PositionTypeModule } from './modules/position-type/position-type.module
     })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    ConfigurationService, 
+    AppService
+  ],
 })
-export class AppModule { }
+export class AppModule { 
+  static port: number;
+
+  constructor(
+    private readonly configurationSvc: ConfigurationService
+  ) {
+    AppModule.port = this.configurationSvc.port as number;
+  }
+}
