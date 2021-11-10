@@ -1,27 +1,24 @@
+import { DatabaseModule } from './shared/database/database.module';
+import { Logger, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PositionTypeModule } from './modules/position-type/position-type.module';
 import { LocationModule } from './modules/location/location.module';
 import { UnitTypeModule } from './modules/unit-type/unit-type.module';
 import { TenureModule } from './modules/tenure/tenure.module';
-import { TenureController } from './modules/tenure/tenure.controller';
-
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DatabaseConnectionService } from './shared/services/database-connection.service';
-import { UnitTypeService } from './modules/unit-type/unit-type.service';
-import { UnitTypeController } from './modules/unit-type/unit-type.controller';
-import { UnitTypeEntity } from './modules/unit-type/unit-type.entity';
-import { PositionTypeModule } from './modules/position-type/position-type.module';
+import { validationSchema } from './shared/utils/validation';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      validationSchema
+    }),
+    DatabaseModule,
     LocationModule,
     UnitTypeModule,
     TenureModule,
-    PositionTypeModule,
-    TypeOrmModule.forRootAsync({
-      useClass: DatabaseConnectionService
-    })
+    PositionTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],

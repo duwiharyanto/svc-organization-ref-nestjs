@@ -8,9 +8,17 @@ export class PositionTypeEntity {
   @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
   id: string;
 
-  @Column({type: "varchar", length: 128})
-  @Generated('uuid')
-  uuid: string;
+  @Column({ type: "varchar", length: 128 })
+  nama: string;
+
+  @Column({ type: "varchar", length: 128 })
+  nama_en: string;
+
+  @Column({ type: "varchar", length: 64, nullable: true })
+  nama_singkat: string;
+
+  @Column({ type: "varchar", length: 64, nullable: true })
+  nama_singkat_en: string;
 
   @Column({ type: "int", width: 1, default: 1 })
   flag_aktif: number;
@@ -27,15 +35,7 @@ export class PositionTypeEntity {
   @UpdateDateColumn()
   tgl_update: Date;
 
-  @Column({ type: "varchar", length: 128 })
-  nama: string;
-
-  @Column({ type: "varchar", length: 128 })
-  nama_en: string;
-
-  @Column({ type: "varchar", length: 64, nullable: true })
-  nama_singkat: string;
-
-  @Column({ type: "varchar", length: 64, nullable: true })
-  nama_singkat_en: string;
+  @Column({type: "varchar", length: 128})
+  @Generated('uuid')
+  uuid: string;
 }
