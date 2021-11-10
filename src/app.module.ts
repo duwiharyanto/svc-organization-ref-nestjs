@@ -1,36 +1,26 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { DatabaseModule } from './shared/database/database.module';
+import { Logger, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseConnectionService } from './shared/services/database-connection.service';
 import { PositionTypeModule } from './modules/position-type/position-type.module';
 import { LocationModule } from './modules/location/location.module';
 import { UnitTypeModule } from './modules/unit-type/unit-type.module';
 import { TenureModule } from './modules/tenure/tenure.module';
-import { ConfigurationService } from './shared/services/configuration.service';
+import { validationSchema } from './shared/utils/validation';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      validationSchema
+    }),
+    DatabaseModule,
     LocationModule,
     UnitTypeModule,
     TenureModule,
-    PositionTypeModule,
-    TypeOrmModule.forRootAsync({
-      useClass: DatabaseConnectionService
-    })
+    PositionTypeModule
   ],
   controllers: [AppController],
-  providers: [
-    ConfigurationService, 
-    AppService
-  ],
+  providers: [AppService],
 })
-export class AppModule { 
-  static port: number;
-
-  constructor(
-    private readonly configurationSvc: ConfigurationService
-  ) {
-    AppModule.port = this.configurationSvc.port as number;
-  }
-}
+export class AppModule { }
