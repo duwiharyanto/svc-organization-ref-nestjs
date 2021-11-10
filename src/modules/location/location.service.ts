@@ -4,7 +4,7 @@ import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 import { Repository } from 'typeorm';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
-import LocationNotFoundException from './exceptions/location-not-found.exception';
+import { LocationBadRequestException } from './exceptions/location-bad-request.exception';
 import { LocationEntity } from './location.entity';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class LocationService {
           data: [location] 
         };
       }
-      throw new LocationNotFoundException(uuid);
+      throw new LocationBadRequestException(uuid);
     } else {
       const locations = await this.locationRepository.find();
       const locationsCount = await this.locationRepository.count();
@@ -52,14 +52,14 @@ export class LocationService {
         data: [updatedLocation]
       };
     }
-    throw new LocationNotFoundException(uuid);
+    throw new LocationBadRequestException(uuid);
   }
 
   async deleteLocation(uuid: string): Promise<void> {
     const findLocation = await this.locationRepository.findOne({where: {uuid: uuid}});
     const deleteResponse = await this.locationRepository.softDelete(findLocation.id);
     if (!deleteResponse.affected) {
-      throw new LocationNotFoundException(uuid);
+      throw new LocationBadRequestException(uuid);
     }
   }
 

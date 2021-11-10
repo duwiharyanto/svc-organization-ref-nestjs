@@ -5,7 +5,7 @@ import { TenureEntity } from './tenure.entity';
 import { CreateTenureDto } from './dto/create-tenure.dto';
 import { UpdateTenureDto } from './dto/update-tenure.dto';
 import { StatusDataDto } from 'src/shared/dto/status-data.dto';
-import TenureNotFoundException from './exceptions/tenure-not-found.exception';
+import { TenureBadRequestException } from './exceptions/tenure-bad-request.exception';
 
 @Injectable()
 export class TenureService {
@@ -30,7 +30,7 @@ export class TenureService {
           data: [tenure] 
         };
       }
-      throw new TenureNotFoundException(uuid);
+      throw new TenureBadRequestException(uuid);
     } else {
       const tenures = await this.tenureRepository.find();
       const tenuresCount = await this.tenureRepository.count();
@@ -51,14 +51,14 @@ export class TenureService {
         data: [updatedTenure]
       };
     }
-    throw new TenureNotFoundException(uuid);
+    throw new TenureBadRequestException(uuid);
   }
 
   async deleteTenure(uuid: string): Promise<void> {
     const findTenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
     const deleteResponse = await this.tenureRepository.softDelete(findTenure.id);
     if (!deleteResponse.affected) {
-      throw new TenureNotFoundException(uuid);
+      throw new TenureBadRequestException(uuid);
     }
   }
   

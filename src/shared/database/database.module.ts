@@ -8,14 +8,15 @@ import { Module } from '@nestjs/common';
 			imports: [ConfigModule],
 			inject: [ConfigService],
 			useFactory: (configService: ConfigService) => ({
+				name: 'hcm_organisasi_reference',
 				type: 'mysql',
-				host: configService.get('DATABASE_HOST'),
-				port: configService.get('DATABASE_PORT'),
-				username: configService.get('DATABASE_USER'),
-				password: configService.get('DATABASE_PASSWORD'),
-				database: configService.get('DATABASE_DB'),
-				synchronize: true,
-				dropSchema: true,
+				host: process.env.DATABASE_HOST,
+        port: Number(process.env.DATABASE_PORT),
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_DB,
+        synchronize: false,
+        dropSchema: false,
 				logging: true,
 				entities: ['dist/**/*.entity.js']
 			})

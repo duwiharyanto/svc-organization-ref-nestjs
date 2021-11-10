@@ -1,24 +1,24 @@
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("jenis_unit")
 export class UnitTypeEntity {
 
   @Exclude({ toPlainOnly: true })
-  @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
+  @PrimaryColumn({ type: "bigint", unsigned: true })
   id: string;
 
   @Column({ type: "varchar", length: 128 })
-  nama: string;
+  nama_jenis_unit: string;
 
   @Column({ type: "varchar", length: 128 })
-  nama_en: string;
+  nama_jenis_unit_en: string;
 
   @Column({ type: "varchar", length: 64, nullable: true })
-  nama_singkat: string;
+  nama_singkat_jenis_unit: string;
 
   @Column({ type: "varchar", length: 64, nullable: true })
-  nama_singkat_en: string;
+  nama_singkat_jenis_unit_en: string;
 
   @Column({ type: "int", width: 1, default: 1 })
   flag_aktif: number;
@@ -38,4 +38,9 @@ export class UnitTypeEntity {
   @Column({type: "varchar", length: 128})
   @Generated('uuid')
   uuid: string;
+
+  @BeforeInsert()
+  setNewId() {
+    this.id = "0";
+  }
 }

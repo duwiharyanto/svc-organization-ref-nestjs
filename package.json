@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:local": "NODE_ENV=local PORT=5300 DATABASE_HOST=localhost DATABASE_PORT=3306 DATABASE_USER=HCM DATABASE_PASSWORD=Bismillah DATABASE_DB=HCM_organisasi nest start --watch",
+    "start:local": "NODE_ENV=local PORT=5300 DATABASE_HOST=127.0.0.1 DATABASE_PORT=3306 DATABASE_USER=HCM DATABASE_PASSWORD=Bismillah DATABASE_DB=HCM_organisasi nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:dev": "node dist/main",
     "start:staging": "node dist/main",

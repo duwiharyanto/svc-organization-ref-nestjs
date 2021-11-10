@@ -39,7 +39,7 @@ export class TenureController {
   @UseInterceptors(ClassSerializerInterceptor)
   async createTenure(@Body() tenure: CreateTenureDto) {
     if (tenure.periode_mulai && tenure.periode_selesai) {
-      tenure.nama = tenure.periode_mulai + '/' + tenure.periode_selesai;
+      tenure.nama_periode_jabatan = tenure.periode_mulai + '/' + tenure.periode_selesai;
     }
     return this.tenureSvc.createTenure(tenure);
   }

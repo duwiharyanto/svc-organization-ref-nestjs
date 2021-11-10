@@ -1,11 +1,11 @@
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("lokasi")
 export class LocationEntity {
   
   @Exclude({ toPlainOnly: true })
-  @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
+  @PrimaryColumn({ type: "bigint", unsigned: true })
   id: string;
 
   @Column({ type: "varchar", length: 255 })
@@ -44,4 +44,9 @@ export class LocationEntity {
   @Column({type: "varchar", length: 128})
   @Generated('uuid')
   uuid: string;
+
+  @BeforeInsert()
+  setNewId() {
+    this.id = "0";
+  }
 }

@@ -21,7 +21,7 @@ export class SingleTenureDto {
   tgl_update: Date;
 
   @ApiProperty()
-  nama: string;
+  nama_periode_jabatan: string;
 
   @ApiProperty()
   periode_mulai: string;
