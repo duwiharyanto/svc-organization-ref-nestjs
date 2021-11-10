@@ -8,9 +8,14 @@ export class TenureEntity {
   @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
   id: string;
 
-  @Column({type: "varchar", length: 128})
-  @Generated('uuid')
-  uuid: string;
+  @Column({ type: "text" })
+  nama: string;
+
+  @Column()
+  tanggal_periode_mulai: Date;
+
+  @Column()
+  tanggal_periode_selesai: Date;
 
   @Column({ type: "int", width: 1, default: 1 })
   flag_aktif: number;
@@ -27,12 +32,7 @@ export class TenureEntity {
   @UpdateDateColumn()
   tgl_update: Date;
 
-  @Column({ type: "text" })
-  nama: string;
-
-  @Column()
-  tanggal_periode_mulai: Date;
-
-  @Column()
-  tanggal_periode_selesai: Date;
+  @Column({type: "varchar", length: 128})
+  @Generated('uuid')
+  uuid: string;
 }
