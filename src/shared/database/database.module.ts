@@ -15,7 +15,7 @@ import { Module } from '@nestjs/common';
 				password: configService.get('DATABASE_PASSWORD'),
 				database: configService.get('DATABASE_DB'),
 				synchronize: true,
-				dropSchema: false,
+				dropSchema: true,
 				logging: true,
 				entities: ['dist/**/*.entity.js']
 			})

@@ -16,7 +16,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api/docs', app, document);
   
-  const port = config.get('PORT') || 3000;
+  const port = parseInt(config.get('PORT')) || 3000;
   await app.listen(port, () => {
     Logger.log(`Running in ${config.get('NODE_ENV')} mode on ${config.get('PORT')} port`);
   });
