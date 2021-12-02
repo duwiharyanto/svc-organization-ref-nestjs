@@ -26,8 +26,21 @@ export class TenureService {
     if (uuid) {
       const tenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
       if (tenure) {
+        const periodeArray = tenure.nama_periode_jabatan.split('/');
         return { 
-          data: [tenure] 
+          data: [{
+            nama_periode_jabatan: tenure.nama_periode_jabatan,
+            periode_mulai: periodeArray[0],
+            periode_selesai: periodeArray[1],
+            tanggal_periode_mulai: tenure.tanggal_periode_mulai,
+            tanggal_periode_selesai: tenure.tanggal_periode_selesai,
+            flag_aktif: tenure.flag_aktif,
+            user_input: tenure.user_input,
+            tgl_input: tenure.tgl_input,
+            user_update: tenure.user_update,
+            tgl_update: tenure.tgl_update,
+            uuid: tenure.uuid
+          }] 
         };
       }
       throw new TenureBadRequestException(uuid);
