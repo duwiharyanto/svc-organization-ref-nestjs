@@ -12,4 +12,6 @@ export class UpdateUnitTypeDto {
 
   @ApiProperty()
   nama_singkat_jenis_unit_en: string;
+
+  user_update: string;
 }

@@ -14,4 +14,6 @@ export class CreateTenureDto {
 
   @ApiProperty()
   tanggal_periode_selesai: Date;
+
+  user_input: string;
 }

@@ -1,30 +1,24 @@
 import { Exclude } from "class-transformer";
 import { BeforeInsert, Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
-@Entity("lokasi")
-export class LocationEntity {
-  
+@Entity("referensi")
+export class ReferensiEntity {
   @Exclude({ toPlainOnly: true })
   @PrimaryColumn({ type: "bigint", unsigned: true })
   id: string;
 
-  @Column({ type: "varchar", length: 255 })
-  nama: string;
+  @Column({ type: "varchar", length: 12 })
+  kode: string;
 
   @Column({ type: "text" })
-  nama_gedung: string;
+  label: string;
 
-  @Column({ type: "varchar", length: 128, nullable: true })
-  keterangan: string;
+  @Column({ type: "varchar", length: 128 })
+  kelompok: string;
 
-  @Column({ type: "varchar", length: 225 })
-  alamat: string;
-
-  @Column({ type: "varchar", length: 64 })
-  latitude: number;
-
-  @Column({ type: "varchar", length: 64 })
-  longitude: number;
+  @Exclude({ toPlainOnly: true })
+  @Column({ type: "int", width: 11 })
+  no_urut: string;
 
   @Column({ type: "int", width: 1, default: 1 })
   flag_aktif: number;

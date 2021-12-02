@@ -12,4 +12,6 @@ export class CreateUnitTypeDto {
 
   @ApiProperty()
   nama_singkat_jenis_unit_en: string;
+
+  user_input: string;
 }

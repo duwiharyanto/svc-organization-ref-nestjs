@@ -22,4 +22,6 @@ export class CreatePositionTypeDto {
   @ApiProperty()
   @IsString()
   nama_singkat_jenis_jabatan_en: string;
+
+  user_input: string;
 }

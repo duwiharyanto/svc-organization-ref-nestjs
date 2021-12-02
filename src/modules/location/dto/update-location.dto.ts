@@ -18,4 +18,6 @@ export class UpdateLocationDto {
 
   @ApiProperty()
   longitude: number;
+
+  user_update: string;
 }

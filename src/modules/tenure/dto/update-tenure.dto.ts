@@ -14,4 +14,6 @@ export class UpdateTenureDto {
 
   @ApiProperty()
   tanggal_periode_selesai: Date;
+
+  user_update: string;
 }
