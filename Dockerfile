@@ -1,16 +1,16 @@
-FROM node:12.14.1-alpine AS BASEIMAGE
+FROM node:12.19.0-alpine3.9
 
-WORKDIR /src
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
 COPY package*.json ./
-RUN npm ci
+
+RUN npm install --only=production
+
 COPY . .
-RUN npm run prebuild && npm run build && npm prune --production
 
-FROM node:12.14.1-alpine
+COPY /dist ./dist
 
-WORKDIR /src
-COPY --from=BASEIMAGE /src/dist /src/dist
-COPY --from=BASEIMAGE /src/node_modules /src/node_modules
-EXPOSE 3000
-
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/main"]
