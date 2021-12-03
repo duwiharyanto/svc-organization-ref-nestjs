@@ -1,15 +1,15 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, Generated, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity("periode_jabatan")
 export class TenureEntity {
   
   @Exclude({ toPlainOnly: true })
-  @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
+  @PrimaryColumn({ type: "bigint", unsigned: true })
   id: string;
 
   @Column({ type: "text" })
-  nama: string;
+  nama_periode_jabatan: string;
 
   @Column()
   tanggal_periode_mulai: Date;
@@ -35,4 +35,9 @@ export class TenureEntity {
   @Column({type: "varchar", length: 128})
   @Generated('uuid')
   uuid: string;
+
+  @BeforeInsert()
+  setNewId() {
+    this.id = "0";
+  }
 }

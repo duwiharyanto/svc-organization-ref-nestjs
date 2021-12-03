@@ -4,7 +4,7 @@ import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 import { Repository } from 'typeorm';
 import { CreatePositionTypeDto } from './dto/create-position-type.dto';
 import { UpdatePositionTypeDto } from './dto/update-position-type.dto';
-import PositionTypeNotFoundException from './exceptions/position-type-not-found.exception';
+import { PositionTypeBadRequestException } from './exceptions/position-type-bad-request.exception';
 import { PositionTypeEntity } from './position-type.entity';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class PositionTypeService {
           data: [positionType] 
         };
       }
-      throw new PositionTypeNotFoundException(uuid);
+      throw new PositionTypeBadRequestException(uuid);
     } else {
       const positionTypes = await this.positionTypeRepository.find();
       const positionTypesCount = await this.positionTypeRepository.count();
@@ -52,14 +52,14 @@ export class PositionTypeService {
         data: [updatedPositionType]
       };
     }
-    throw new PositionTypeNotFoundException(uuid);
+    throw new PositionTypeBadRequestException(uuid);
   }
 
   async deletePositionType(uuid: string): Promise<void> {
     const findPositionType = await this.positionTypeRepository.findOne({where: {uuid: uuid}});
     const deleteResponse = await this.positionTypeRepository.softDelete(findPositionType.id);
     if (!deleteResponse.affected) {
-      throw new PositionTypeNotFoundException(uuid);
+      throw new PositionTypeBadRequestException(uuid);
     }
   }
 

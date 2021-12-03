@@ -4,7 +4,7 @@ import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 import { Repository } from 'typeorm';
 import { CreateUnitTypeDto } from './dto/create-unit-type.dto';
 import { UpdateUnitTypeDto } from './dto/update-unit-type.dto';
-import UnitTypeNotFoundException from './exceptions/unit-type-not-found.exception';
+import { UnitTypeBadRequestException } from './exceptions/unit-type-bad-request.exception';
 import { UnitTypeEntity } from './unit-type.entity';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class UnitTypeService {
           data: [unitType] 
         };
       }
-      throw new UnitTypeNotFoundException(uuid);
+      throw new UnitTypeBadRequestException(uuid);
     } else {
       const unitTypes = await this.unitTypeRepository.find();
       const unitTypesCount = await this.unitTypeRepository.count();
@@ -51,14 +51,14 @@ export class UnitTypeService {
         data: [updatedUnitType]
       };
     }
-    throw new UnitTypeNotFoundException(uuid);
+    throw new UnitTypeBadRequestException(uuid);
   }
 
   async deleteUnitType(uuid: string): Promise<void> {
     const findUnitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
     const deleteResponse = await this.unitTypeRepository.softDelete(findUnitType.id);
     if (!deleteResponse.affected) {
-      throw new UnitTypeNotFoundException(uuid);
+      throw new UnitTypeBadRequestException(uuid);
     }
   }
 }

@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class SingleTenureDto {
-
+export class SingleReferenceDto {
   @ApiProperty()
   uuid: string;
 
@@ -21,23 +20,14 @@ export class SingleTenureDto {
   tgl_update: Date;
 
   @ApiProperty()
-  nama_periode_jabatan: string;
+  kode: string;
 
   @ApiProperty()
-  periode_mulai: string;
+  label: string;
 
   @ApiProperty()
-  periode_selesai: string;
+  kelompok: string;
 
   @ApiProperty()
-  tanggal_periode_mulai: Date;
-
-  @ApiProperty()
-  tanggal_periode_mulai_label: string;
-
-  @ApiProperty()
-  tanggal_periode_selesai: Date;
-
-  @ApiProperty()
-  tanggal_periode_selesai_label: string
+  no_urut: number;
 }

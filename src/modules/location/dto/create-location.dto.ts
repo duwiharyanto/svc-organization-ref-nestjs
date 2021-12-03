@@ -18,4 +18,6 @@ export class CreateLocationDto {
 
   @ApiProperty()
   longitude: number;
+
+  user_input: string;
 }

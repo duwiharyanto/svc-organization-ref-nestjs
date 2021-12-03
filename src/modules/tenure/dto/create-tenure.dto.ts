@@ -7,11 +7,13 @@ export class CreateTenureDto {
   @ApiProperty()
   periode_selesai: number;
 
-  nama: string;
+  nama_periode_jabatan: string;
 
   @ApiProperty()
   tanggal_periode_mulai: Date;
 
   @ApiProperty()
   tanggal_periode_selesai: Date;
+
+  user_input: string;
 }

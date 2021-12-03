@@ -18,7 +18,7 @@ async function bootstrap() {
   
   const port = parseInt(config.get('PORT')) || 3000;
   await app.listen(port, () => {
-    Logger.log(`Running in ${config.get('NODE_ENV')} mode on ${config.get('PORT')} port`);
+    Logger.log(`Running in ${config.get('NODE_ENV')} mode http://localhost:${config.get('PORT')}`);
   });
 }
 bootstrap();

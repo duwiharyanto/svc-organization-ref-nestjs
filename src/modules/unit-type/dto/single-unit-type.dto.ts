@@ -20,14 +20,14 @@ export class SingleUnitTypeDto {
   tgl_update: Date;
 
   @ApiProperty()
-  nama: string;
+  nama_jenis_unit: string;
 
   @ApiProperty()
-  nama_en: string;
+  nama_jenis_unit_en: string;
 
   @ApiProperty()
-  nama_singkat: string;
+  nama_singkat_jenis_unit: string;
 
   @ApiProperty()
-  nama_singkat_en: string;
+  nama_singkat_jenis_unit_en: string;
 }

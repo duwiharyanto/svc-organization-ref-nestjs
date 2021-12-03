@@ -1,5 +1,5 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
-import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Patch, Post, Put, UseInterceptors } from '@nestjs/common';
+import { ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import FindOneParams from 'src/shared/utils/find-one-params';
 import { CreatePositionTypeDto } from './dto/create-position-type.dto';
 import { PositionTypeService } from './position-type.service';
@@ -10,55 +10,83 @@ import { UpdatePositionTypeDto } from './dto/update-position-type.dto';
 import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 
 @ApiTags('Jenis Jabatan')
-@Controller('position-type')
+@Controller('/public/api/v1/position-type')
 export class PositionTypeController { 
   constructor(
     private readonly positionTypeSvc: PositionTypeService
   ) {}
   
+  @ApiHeader({ name: 'X-Member' })
   @ApiQuery({ name: 'limit', type: 'integer', required: false, description: 'Limit amount of resources' })
   @ApiQuery({ name: 'offset', type: 'integer', required: false, description: 'Offset amount of resources.' })
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  getAllPositionType() {
+  getAllPositionType(@Headers() headers: any) {
+    const user = headers['x-member'];
+
     return this.positionTypeSvc.readPositionType();
   }
 
+  @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
   @ApiOkResponse({ description: 'Retrieved task by ID successfully', type: SinglePositionTypeDto, isArray: true })
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  getPositionTypeByUUID(@Param() { id }: FindOneParams) {
+  getPositionTypeByUUID(@Headers() headers: any, @Param() { id }: FindOneParams) {
+    const user = headers['x-member'];
+
     return this.positionTypeSvc.readPositionType(id);
   }
 
+  @ApiHeader({ name: 'X-Member' })
   @ApiOkResponse({ description: 'Get create one base response', type: CreateResponseDto})
   @Post()
-  // @UseGuards(JwtAuthenticationGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createPositionType(@Body() positionType: CreatePositionTypeDto) {
+  async createPositionType(@Headers() headers: any, @Body() positionType: CreatePositionTypeDto) {
+    const user = headers['x-member'];
+
+    if (!positionType.nama_jenis_jabatan) throw new BadRequestException('Nama jenis jabatan wajib diisi.');
+    if (!positionType.nama_jenis_jabatan_en) throw new BadRequestException('Nama jenis jabatan inggris wajib diisi.');
+    positionType.user_input = user;
+    
     return this.positionTypeSvc.createPositionType(positionType);
   }
 
+  @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Patch(':id')
+  @Put(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  async updatePositionType(@Param() { id }: FindOneParams, @Body() positionType: UpdatePositionTypeDto) {
+  async updatePositionType(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() positionType: UpdatePositionTypeDto) {
+    const user = headers['x-member'];
+
+    if (!positionType.nama_jenis_jabatan) throw new BadRequestException('Nama jenis jabatan wajib diisi.');
+    if (!positionType.nama_jenis_jabatan_en) throw new BadRequestException('Nama jenis jabatan inggris wajib diisi.');
+    positionType.user_update = user;
+
     return this.positionTypeSvc.updatePositionType(id, positionType);
   }
 
+  @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Patch(':id/status')
+  @Put(':id/status')
   @UseInterceptors(ClassSerializerInterceptor)
-  async activeDeactivePositionType(@Param() { id }: FindOneParams, @Body() positionType: StatusDataDto) {
+  async activeDeactivePositionType(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() positionType: StatusDataDto) {
+    const user = headers['x-member'];
+
+    if (positionType.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    positionType.user_update = user;
+
     return this.positionTypeSvc.updatePositionType(id, positionType);
   }
 
+  @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
   @Delete(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  async deletePositionType(@Param() { id }: FindOneParams) {
+  async deletePositionType(@Headers() headers: any, @Param() { id }: FindOneParams) {
+    const user = headers['x-member'];
+
     return this.positionTypeSvc.deletePositionType(id);
   }
 }
