@@ -53,6 +53,8 @@ export class TenureController {
     if (!tenure.tanggal_periode_selesai) throw new BadRequestException('Tanggal periode selesai wajib diisi.');
     tenure.nama_periode_jabatan = tenure.periode_mulai + '/' + tenure.periode_selesai;
     tenure.user_input = user;
+    delete tenure.periode_mulai;
+    delete tenure.periode_selesai;
 
     return this.tenureSvc.createTenure(tenure);
   }
