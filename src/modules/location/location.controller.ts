@@ -39,10 +39,16 @@ export class LocationController {
   @ApiHeader({ name: 'X-Member' })
   @ApiOkResponse({ description: 'Get create one base response', type: CreateResponseDto})
   @Post()
-  // @UseGuards(JwtAuthenticationGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async createLocation(@Headers() headers: any, @Body() location: CreateLocationDto) {
     const user = headers['x-member'];
+
+    if (location.nama === undefined) throw new BadRequestException('Nama lokasi wajib diisi.');
+    if (location.nama_gedung === undefined) throw new BadRequestException('Nama gedung wajib diisi.');
+    if (location.alamat === undefined) throw new BadRequestException('Alamat lokasi wajib diisi.');
+    if (location.latitude === undefined) throw new BadRequestException('Latitude wajib diisi.');
+    if (location.longitude === undefined) throw new BadRequestException('Longitude wajib diisi.');
+
     location.user_input = user;
 
     return this.locationSvc.createLocation(location);
@@ -54,6 +60,13 @@ export class LocationController {
   @UseInterceptors(ClassSerializerInterceptor)
   async updateLocation(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() location: UpdateLocationDto) {
     const user = headers['x-member'];
+
+    if (location.nama === undefined) throw new BadRequestException('Nama lokasi wajib diisi.');
+    if (location.nama_gedung === undefined) throw new BadRequestException('Nama gedung wajib diisi.');
+    if (location.alamat === undefined) throw new BadRequestException('Alamat lokasi wajib diisi.');
+    if (location.latitude === undefined) throw new BadRequestException('Latitude wajib diisi.');
+    if (location.longitude === undefined) throw new BadRequestException('Longitude wajib diisi.');
+    
     location.user_update = user;
 
     return this.locationSvc.updateLocation(id, location);
