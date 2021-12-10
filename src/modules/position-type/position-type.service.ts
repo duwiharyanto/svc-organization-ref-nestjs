@@ -34,6 +34,26 @@ export class PositionTypeService {
       throw new PositionTypeBadRequestException(uuid);
     } else {
       const positionTypes = await this.positionTypeRepository.find();
+      const data = [];
+      if (positionTypes.length) {
+        for (const positionType of positionTypes) {
+          const positionTypeUsed = 0;
+
+          data.push({
+            nama_jenis_jabatan: positionType.nama_jenis_jabatan,
+            nama_jenis_jabatan_en: positionType.nama_jenis_jabatan_en,
+            nama_singkat_jenis_jabatan: positionType.nama_singkat_jenis_jabatan,
+            nama_singkat_jenis_jabatan_en: positionType.nama_singkat_jenis_jabatan_en,
+            flag_aktif: positionType.flag_aktif,
+            user_input: positionType.user_input,
+            tgl_input: positionType.tgl_input,
+            user_update: positionType.user_update,
+            tgl_update: positionType.tgl_update,
+            uuid: positionType.uuid,
+            digunakan: positionTypeUsed
+          });
+        }
+      }
       const positionTypesCount = await this.positionTypeRepository.count();
       return {
         data: positionTypes,
