@@ -54,10 +54,10 @@ export class PositionTypeService {
           });
         }
       }
-      const positionTypesCount = await this.positionTypeRepository.count();
+      // const positionTypesCount = await this.positionTypeRepository.count();
       return {
-        data: positionTypes,
-        count: positionTypesCount
+        data: data,
+        count: positionTypes.length
       };
     }
   }
