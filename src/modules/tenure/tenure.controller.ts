@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Patch, Post, Put, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Patch, Post, Put, UseInterceptors, BadRequestException, Query } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateResponseDto } from 'src/shared/dto/create-response.dto';
 import { ListResponseDto } from 'src/shared/dto/list-response.dto';
@@ -19,13 +19,14 @@ export class TenureController {
   @ApiHeader({ name: 'X-Member' })
   @ApiQuery({ name: 'limit', type: 'integer', required: false, description: 'Limit amount of resources' })
   @ApiQuery({ name: 'offset', type: 'integer', required: false, description: 'Offset amount of resources.' })
+  @ApiQuery({ name: 'as_references', type: 'integer', required: false, description: 'Request list as a references' })
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  getAllTenure(@Headers() headers: any) {
+  getAllTenure(@Headers() headers: any, @Query() query: any) {
     const user = headers['x-member'];
 
-    return this.tenureSvc.readTenure();
+    return this.tenureSvc.readTenure(query);
   }
 
   @ApiHeader({ name: 'X-Member' })
@@ -36,7 +37,7 @@ export class TenureController {
   getTenureByUUID(@Headers() headers: any, @Param() { id }: FindOneParams) {
     const user = headers['x-member'];
 
-    return this.tenureSvc.readTenure(id);
+    return this.tenureSvc.readTenure(undefined, id);
   }
 
   @ApiHeader({ name: 'X-Member' })

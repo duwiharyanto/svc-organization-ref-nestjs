@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 import { UnitEntity } from 'src/shared/entities/unit.entity';
+import { UnitHistoryEntity } from 'src/shared/entities/units-history.entity';
 import { Repository } from 'typeorm';
 import { CreateUnitTypeDto } from './dto/create-unit-type.dto';
 import { UpdateUnitTypeDto } from './dto/update-unit-type.dto';
@@ -12,6 +13,7 @@ import { UnitTypeEntity } from './unit-type.entity';
 export class UnitTypeService { 
   constructor(
     @InjectRepository(UnitEntity) private unitRepository: Repository<UnitEntity>,
+    @InjectRepository(UnitHistoryEntity) private unitHistoryRepository: Repository<UnitHistoryEntity>,
     @InjectRepository(UnitTypeEntity) private unitTypeRepository: Repository<UnitTypeEntity>
   ) { }
 
@@ -24,10 +26,9 @@ export class UnitTypeService {
     };
   }
 
-  async readUnitType(uuid?: string): Promise<any> {
+  async readUnitType(args: any, uuid?: string): Promise<any> {
     if (uuid) {
       const unitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
-      const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: unitType.id}});
       if (unitType) {
         return { 
           data: [{
@@ -40,40 +41,49 @@ export class UnitTypeService {
             tgl_input: unitType.tgl_input,
             user_update: unitType.user_update,
             tgl_update: unitType.tgl_update,
-            uuid: unitType.uuid,
-            digunakan: unitTypeUsed
+            uuid: unitType.uuid
           }] 
         };
       }
       throw new UnitTypeBadRequestException(uuid);
     } else {
-      const unitTypes = await this.unitTypeRepository.find();
-      const data = [];
-      if (unitTypes.length) {
-        for (const unitType of unitTypes) {
-          const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: unitType.id}});
+      if (args.as_references) {
+        const unitTypes = await this.unitTypeRepository.find({ where: { flag_aktif: 1 }});
 
-          data.push({
-            nama_jenis_unit: unitType.nama_jenis_unit,
-            nama_jenis_unit_en: unitType.nama_jenis_unit_en,
-            nama_singkat_jenis_unit: unitType.nama_singkat_jenis_unit,
-            nama_singkat_jenis_unit_en: unitType.nama_singkat_jenis_unit_en,
-            flag_aktif: unitType.flag_aktif,
-            user_input: unitType.user_input,
-            tgl_input: unitType.tgl_input,
-            user_update: unitType.user_update,
-            tgl_update: unitType.tgl_update,
-            uuid: unitType.uuid,
-            digunakan: unitTypeUsed
-          })
+        return {
+          data: unitTypes,
+          count: unitTypes.length
+        };
+      } else {
+        const unitTypes = await this.unitTypeRepository.find();
+        const data = [];
+
+        if (unitTypes.length) {
+          for (const unitType of unitTypes) {
+            const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: unitType.id}});
+            const unitTypeHistoryUsed = await this.unitHistoryRepository.count({ where: {id_jenis_unit: unitType.id}});
+  
+            data.push({
+              nama_jenis_unit: unitType.nama_jenis_unit,
+              nama_jenis_unit_en: unitType.nama_jenis_unit_en,
+              nama_singkat_jenis_unit: unitType.nama_singkat_jenis_unit,
+              nama_singkat_jenis_unit_en: unitType.nama_singkat_jenis_unit_en,
+              flag_aktif: unitType.flag_aktif,
+              user_input: unitType.user_input,
+              tgl_input: unitType.tgl_input,
+              user_update: unitType.user_update,
+              tgl_update: unitType.tgl_update,
+              uuid: unitType.uuid,
+              digunakan: unitTypeUsed + unitTypeHistoryUsed
+            })
+          }
         }
+        
+        return {
+          data: data,
+          count: unitTypes.length
+        };
       }
-
-      // const unitTypesCount = await this.unitTypeRepository.count();
-      return {
-        data: data,
-        count: unitTypes.length
-      };
     }
   }
 
@@ -90,12 +100,24 @@ export class UnitTypeService {
     throw new UnitTypeBadRequestException(uuid);
   }
 
-  async deleteUnitType(uuid: string): Promise<void> {
+  async deleteUnitType(uuid: string): Promise<any> {
     const findUnitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
-    const deleteResponse = await this.unitTypeRepository.softDelete(findUnitType.id);
-    if (!deleteResponse.affected) {
-      throw new UnitTypeBadRequestException(uuid);
+
+    if (findUnitType) {
+      const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: findUnitType.id}});
+      const unitTypeHistoryUsed = await this.unitHistoryRepository.count({ where: {id_jenis_unit: findUnitType.id}});
+
+      if ((unitTypeUsed + unitTypeHistoryUsed) < 1) {
+        const deleteResponse = await this.unitTypeRepository.delete(findUnitType.id);
+        if (deleteResponse.affected) {
+          return { message: 'Data jenis unit berhasil dihapus.' };
+        }
+        throw new BadRequestException('Data jenis unit gagal dihapus.');
+      }
+      throw new BadRequestException('Data jenis unit sudah digunakan, tidak bisa dihapus.');
     }
+
+    throw new UnitTypeBadRequestException(uuid);
   }
 
   async getUnitTypeByUUID(uuid: string) {
