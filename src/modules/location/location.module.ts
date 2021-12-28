@@ -4,12 +4,16 @@ import { Module } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { LocationEntity } from './location.entity';
 import { UnitEntity } from 'src/shared/entities/unit.entity';
+import { UnitHistoryEntity } from 'src/shared/entities/units-history.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    LocationEntity,
-    UnitEntity
-  ])],
+  imports: [
+    TypeOrmModule.forFeature([
+      LocationEntity,
+      UnitEntity,
+      UnitHistoryEntity
+    ])
+  ],
   controllers: [LocationController,],
   providers: [LocationService],
 })

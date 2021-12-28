@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TenureEntity } from './tenure.entity';
@@ -6,10 +6,14 @@ import { CreateTenureDto } from './dto/create-tenure.dto';
 import { UpdateTenureDto } from './dto/update-tenure.dto';
 import { StatusDataDto } from 'src/shared/dto/status-data.dto';
 import { TenureBadRequestException } from './exceptions/tenure-bad-request.exception';
+import { OfficerEntity } from 'src/shared/entities/officers.entity';
+import { OfficersHistoryEntity } from 'src/shared/entities/officers-history.entity';
 
 @Injectable()
 export class TenureService {
   constructor(
+    @InjectRepository(OfficerEntity) private officerRepository: Repository<OfficerEntity>,
+    @InjectRepository(OfficersHistoryEntity) private officerHistoryRepository: Repository<OfficersHistoryEntity>,
     @InjectRepository(TenureEntity) private tenureRepository: Repository<TenureEntity>
   ) {}
 
@@ -22,7 +26,7 @@ export class TenureService {
     };
   }
 
-  async readTenure(uuid?: string): Promise<any> {
+  async readTenure(args: any, uuid?: string): Promise<any> {
     if (uuid) {
       const tenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
       if (tenure) {
@@ -46,11 +50,40 @@ export class TenureService {
       throw new TenureBadRequestException(uuid);
     } else {
       const tenures = await this.tenureRepository.find();
-      const tenuresCount = await this.tenureRepository.count();
-      return {
-        data: tenures,
-        count: tenuresCount
-      };
+
+      if (args.as_references) {
+        return {
+          data: tenures,
+          count: tenures.length
+        };
+      } else {
+        const data = [];
+  
+        if (tenures.length) {
+          for (const tenure of tenures) {
+            const tenureUsed = await this.officerRepository.count({ where: {id_periode_jabatan: tenure.id}});
+            const tenureHistoryUsed = await this.officerHistoryRepository.count({ where: {id_periode_jabatan: tenure.id}});
+  
+            data.push({
+              nama_periode_jabatan: tenure.nama_periode_jabatan,
+              tanggal_periode_mulai: tenure.tanggal_periode_mulai,
+              tanggal_periode_selesai: tenure.tanggal_periode_selesai,
+              flag_aktif: tenure.flag_aktif,
+              user_input: tenure.user_input,
+              tgl_input: tenure.tgl_input,
+              user_update: tenure.user_update,
+              tgl_update: tenure.tgl_update,
+              uuid: tenure.uuid,
+              digunakan: tenureUsed + tenureHistoryUsed
+            })
+          }
+        }
+  
+        return {
+          data: data,
+          count: data.length
+        };
+      }
     }
   }
 
@@ -67,12 +100,18 @@ export class TenureService {
     throw new TenureBadRequestException(uuid);
   }
 
-  async deleteTenure(uuid: string): Promise<void> {
+  async deleteTenure(uuid: string): Promise<any> {
     const findTenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
-    const deleteResponse = await this.tenureRepository.softDelete(findTenure.id);
-    if (!deleteResponse.affected) {
-      throw new TenureBadRequestException(uuid);
+    if (findTenure) {
+      const deleteResponse = await this.tenureRepository.delete(findTenure.id);
+      
+      if (deleteResponse.affected) {
+        return { message: 'Data periode jabatan berhasil dihapus.' };
+      }
+
+      throw new BadRequestException('Data periode jabatan gagal dihapus.');
     }
+    throw new TenureBadRequestException(uuid);
   }
 
   async getTenuerByUUID(uuid: string) {

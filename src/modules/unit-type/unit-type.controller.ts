@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Patch, Post, Put, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Patch, Post, Put, Query, UseInterceptors } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UnitTypeService } from 'src/modules/unit-type/unit-type.service';
 import { CreateResponseDto } from 'src/shared/dto/create-response.dto';
@@ -20,13 +20,14 @@ export class UnitTypeController {
   @ApiHeader({ name: 'X-Member' })
   @ApiQuery({ name: 'limit', type: 'integer', required: false, description: 'Limit amount of resources' })
   @ApiQuery({ name: 'offset', type: 'integer', required: false, description: 'Offset amount of resources.' })
+  @ApiQuery({ name: 'as_references', type: 'integer', required: false, description: 'Request list as a references' })
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  getAllUnitType(@Headers() headers: any) {
+  getAllUnitType(@Headers() headers: any, @Query() query: any) {
     const user = headers['x-member'];
 
-    return this.unitTypeSvc.readUnitType();
+    return this.unitTypeSvc.readUnitType(query);
   }
 
   @ApiHeader({ name: 'X-Member' })
@@ -37,7 +38,7 @@ export class UnitTypeController {
   getUnitTypeByUUID(@Headers() headers: any, @Param() { id }: FindOneParams) {
     const user = headers['x-member'];
 
-    return this.unitTypeSvc.readUnitType(id);
+    return this.unitTypeSvc.readUnitType(undefined, id);
   }
 
   @ApiHeader({ name: 'X-Member' })

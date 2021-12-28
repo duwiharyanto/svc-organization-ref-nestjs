@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, Headers, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateResponseDto } from 'src/shared/dto/create-response.dto';
 import { ListResponseDto } from 'src/shared/dto/list-response.dto';
@@ -19,13 +19,14 @@ export class LocationController {
   @ApiHeader({ name: 'X-Member' })
   @ApiQuery({ name: 'limit', type: 'integer', required: false, description: 'Limit amount of resources' })
   @ApiQuery({ name: 'offset', type: 'integer', required: false, description: 'Offset amount of resources.' })
+  @ApiQuery({ name: 'as_references', type: 'integer', required: false, description: 'Request list as a references' })
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  getAllLocation(@Headers() headers: any) {
+  getAllLocation(@Headers() headers: any, @Query() query: any) {
     const user = headers['x-member'];
     
-    return this.locationSvc.readLocation();
+    return this.locationSvc.readLocation(query);
   }
 
   @ApiHeader({ name: 'X-Member' })
@@ -33,7 +34,7 @@ export class LocationController {
   @ApiOkResponse({ description: 'Retrieved task by ID successfully', type: SingleLocationDto, isArray: true })
   @Get(':id')
   getPositionTypeByUUID(@Param() { id }: FindOneParams) {
-    return this.locationSvc.readLocation(id);
+    return this.locationSvc.readLocation(undefined, id);
   }
 
   @ApiHeader({ name: 'X-Member' })
