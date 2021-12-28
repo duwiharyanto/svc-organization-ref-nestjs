@@ -74,12 +74,14 @@ export class LocationController {
 
   @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Put(':id/status')
+  @Put(':id/active')
   @UseInterceptors(ClassSerializerInterceptor)
   async activeDeactiveLocation(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() location: StatusDataDto) {
     const user = headers['x-member'];
+    const findLocation = await this.locationSvc.getLocationByUUID(id);
 
-    if (location.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    // if (location.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    location.flag_aktif = findLocation.flag_aktif === 1 ? 0 : 1;
     location.user_update = user;
 
     return this.locationSvc.updateLocation(id, location);

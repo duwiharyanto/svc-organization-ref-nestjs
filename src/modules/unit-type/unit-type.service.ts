@@ -97,4 +97,8 @@ export class UnitTypeService {
       throw new UnitTypeBadRequestException(uuid);
     }
   }
+
+  async getUnitTypeByUUID(uuid: string) {
+    return this.unitTypeRepository.findOne({ where: {uuid: uuid}});
+  }
 }

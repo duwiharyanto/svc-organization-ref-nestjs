@@ -103,4 +103,8 @@ export class LocationService {
     }
   }
 
+  async getLocationByUUID(uuid: string) {
+    return this.locationRepository.findOne({ where: { uuid: uuid }});
+  }
+
 }

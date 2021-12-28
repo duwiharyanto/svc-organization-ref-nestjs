@@ -74,5 +74,9 @@ export class TenureService {
       throw new TenureBadRequestException(uuid);
     }
   }
+
+  async getTenuerByUUID(uuid: string) {
+    return this.tenureRepository.findOne({where: {uuid: uuid}});
+  }
   
 }

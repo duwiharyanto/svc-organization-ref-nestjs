@@ -69,12 +69,14 @@ export class PositionTypeController {
 
   @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Put(':id/status')
+  @Put(':id/active')
   @UseInterceptors(ClassSerializerInterceptor)
   async activeDeactivePositionType(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() positionType: StatusDataDto) {
     const user = headers['x-member'];
+    const findPositionType = await this.positionTypeSvc.getPositionTypeByUUID(id);
 
-    if (positionType.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    // if (positionType.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    positionType.flag_aktif = findPositionType.flag_aktif === 1 ? 0 : 1;
     positionType.user_update = user;
 
     return this.positionTypeSvc.updatePositionType(id, positionType);

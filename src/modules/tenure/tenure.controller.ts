@@ -81,12 +81,14 @@ export class TenureController {
 
   @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Put(':id/status')
+  @Put(':id/active')
   @UseInterceptors(ClassSerializerInterceptor)
   async activeDeactiveTenure(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() tenure: StatusDataDto) {
     const user = headers['x-member'];
+    const findTenure = await this.tenureSvc.getTenuerByUUID(id);
 
-    if (tenure.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    // if (tenure.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    tenure.flag_aktif = findTenure.flag_aktif === 1 ? 0 : 1;
     tenure.user_update = user;
 
     return this.tenureSvc.updateTenure(id, tenure);
