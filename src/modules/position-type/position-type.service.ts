@@ -92,12 +92,17 @@ export class PositionTypeService {
     const findPositionType = await this.positionTypeRepository.findOne({where: {uuid: uuid}});
 
     if (findPositionType) {
-      const deleteResponse = await this.positionTypeRepository.delete(findPositionType.id);
-      if (deleteResponse.affected) {
-        return { message: 'Data jenis jabatan berhasil dihapus.' };
-      }
+      const positionTypeUsed = await this.officerRepository.count({ where: {id_jenis_jabatan: findPositionType.id}});
+      const positionTypeHistoryUsed = await this.officerHistoryRepository.count({ where: {id_jenis_jabatan: findPositionType.id}});
 
-      throw new BadRequestException('Data jenis jabatan gagal dihapus.');
+      if ((positionTypeUsed + positionTypeHistoryUsed) < 1) {
+        const deleteResponse = await this.positionTypeRepository.delete(findPositionType.id);
+        if (deleteResponse.affected) {
+          return { message: 'Data jenis jabatan berhasil dihapus.' };
+        }
+        throw new BadRequestException('Data jenis jabatan gagal dihapus.');
+      }
+      throw new BadRequestException('Data jenis jabatan sudah digunakan, tidak bisa dihapus.');
     }
 
     throw new PositionTypeBadRequestException(uuid);

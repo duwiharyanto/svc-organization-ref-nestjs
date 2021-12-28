@@ -102,14 +102,21 @@ export class TenureService {
 
   async deleteTenure(uuid: string): Promise<any> {
     const findTenure = await this.tenureRepository.findOne({where: {uuid: uuid}});
+
     if (findTenure) {
-      const deleteResponse = await this.tenureRepository.delete(findTenure.id);
+      const tenureUsed = await this.officerRepository.count({ where: {id_periode_jabatan: findTenure.id}});
+      const tenureHistoryUsed = await this.officerHistoryRepository.count({ where: {id_periode_jabatan: findTenure.id}});
+
+      if ((tenureUsed + tenureHistoryUsed) < 1) {
+        const deleteResponse = await this.tenureRepository.delete(findTenure.id);
       
-      if (deleteResponse.affected) {
-        return { message: 'Data periode jabatan berhasil dihapus.' };
+        if (deleteResponse.affected) {
+          return { message: 'Data periode jabatan berhasil dihapus.' };
+        }
+        throw new BadRequestException('Data periode jabatan gagal dihapus.');
       }
 
-      throw new BadRequestException('Data periode jabatan gagal dihapus.');
+      throw new BadRequestException('Data periode jabatan sudah digunakan, tidak bisa dihapus.');
     }
     throw new TenureBadRequestException(uuid);
   }

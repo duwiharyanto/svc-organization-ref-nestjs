@@ -108,11 +108,17 @@ export class LocationService {
     const findLocation = await this.locationRepository.findOne({where: {uuid: uuid}});
 
     if (findLocation) {
-      const deleteResponse = await this.locationRepository.delete(findLocation.id);
-      if (deleteResponse.affected) {
-        return { message: 'Data lokasi berhasil dihapus.' };
+      const locationUsed = await this.unitRepository.count({ where: {id_lokasi: findLocation.id}});
+      const locationHistoryUsed = await this.unitHistoryRepository.count({ where: {id_lokasi: findLocation.id}});
+
+      if ((locationUsed + locationHistoryUsed) < 1) {
+        const deleteResponse = await this.locationRepository.delete(findLocation.id);
+        if (deleteResponse.affected) {
+          return { message: 'Data lokasi berhasil dihapus.' };
+        }
+        throw new BadRequestException('Data lokasi gagal dihapus.');
       }
-      throw new BadRequestException('Data lokasi gagal dihapus.');
+      throw new BadRequestException('Data lokasi sudah digunakan, tidak bisa dihapus.');
     }
     throw new LocationBadRequestException(uuid);
   }

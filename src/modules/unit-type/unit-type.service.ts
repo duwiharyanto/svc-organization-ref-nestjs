@@ -102,12 +102,17 @@ export class UnitTypeService {
     const findUnitType = await this.unitTypeRepository.findOne({ where: {uuid: uuid}});
 
     if (findUnitType) {
-      const deleteResponse = await this.unitTypeRepository.delete(findUnitType.id);
-      if (deleteResponse.affected) {
-        return { message: 'Data jenis unit berhasil dihapus.' };
-      }
+      const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: findUnitType.id}});
+      const unitTypeHistoryUsed = await this.unitHistoryRepository.count({ where: {id_jenis_unit: findUnitType.id}});
 
-      throw new BadRequestException('Data jenis unit gagal dihapus.')
+      if ((unitTypeUsed + unitTypeHistoryUsed) < 1) {
+        const deleteResponse = await this.unitTypeRepository.delete(findUnitType.id);
+        if (deleteResponse.affected) {
+          return { message: 'Data jenis unit berhasil dihapus.' };
+        }
+        throw new BadRequestException('Data jenis unit gagal dihapus.');
+      }
+      throw new BadRequestException('Data jenis unit sudah digunakan, tidak bisa dihapus.');
     }
 
     throw new UnitTypeBadRequestException(uuid);
