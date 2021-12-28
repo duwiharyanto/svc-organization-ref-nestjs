@@ -49,14 +49,15 @@ export class TenureService {
       }
       throw new TenureBadRequestException(uuid);
     } else {
-      const tenures = await this.tenureRepository.find();
-
       if (args.as_references) {
+        const tenures = await this.tenureRepository.find({ where: { flag_aktif: 1 }});
+  
         return {
           data: tenures,
           count: tenures.length
         };
       } else {
+        const tenures = await this.tenureRepository.find();  
         const data = [];
   
         if (tenures.length) {

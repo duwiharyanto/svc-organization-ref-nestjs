@@ -37,14 +37,14 @@ export class PositionTypeService {
       }
       throw new PositionTypeBadRequestException(uuid);
     } else {
-      const positionTypes = await this.positionTypeRepository.find();
-
       if (args.as_references) {
+        const positionTypes = await this.positionTypeRepository.find({ where: { flag_aktif: 1 }});
         return {
           data: positionTypes,
           count: positionTypes.length
         }
       } else {
+        const positionTypes = await this.positionTypeRepository.find();
         const data = [];
         if (positionTypes.length) {
           for (const positionType of positionTypes) {

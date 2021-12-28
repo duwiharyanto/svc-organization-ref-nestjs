@@ -47,15 +47,17 @@ export class UnitTypeService {
       }
       throw new UnitTypeBadRequestException(uuid);
     } else {
-      const unitTypes = await this.unitTypeRepository.find();
-
       if (args.as_references) {
+        const unitTypes = await this.unitTypeRepository.find({ where: { flag_aktif: 1 }});
+
         return {
           data: unitTypes,
           count: unitTypes.length
         };
       } else {
+        const unitTypes = await this.unitTypeRepository.find();
         const data = [];
+
         if (unitTypes.length) {
           for (const unitType of unitTypes) {
             const unitTypeUsed = await this.unitRepository.count({ where: {id_jenis_unit: unitType.id}});

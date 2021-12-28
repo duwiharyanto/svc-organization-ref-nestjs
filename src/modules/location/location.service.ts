@@ -50,14 +50,14 @@ export class LocationService {
       }
       throw new LocationBadRequestException(uuid);
     } else {
-      const locations = await this.locationRepository.find();
-
       if (args.as_references) {
+        const locations = await this.locationRepository.find({ where: {flag_aktif: 1}});
         return {
           data: locations,
           count: locations.length
         };
       } else {
+        const locations = await this.locationRepository.find();
         const data = [];
 
         if (locations.length) {
