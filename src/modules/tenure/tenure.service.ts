@@ -1,3 +1,4 @@
+import { dateToStrLocal } from './../../shared/utils/helper-functions';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -38,6 +39,8 @@ export class TenureService {
             periode_selesai: periodeArray[1],
             tanggal_periode_mulai: tenure.tanggal_periode_mulai,
             tanggal_periode_selesai: tenure.tanggal_periode_selesai,
+            tanggal_periode_mulai_in_ID: dateToStrLocal(tenure.tanggal_periode_mulai),
+            tanggal_periode_selesai_in_ID: dateToStrLocal(tenure.tanggal_periode_selesai),
             flag_aktif: tenure.flag_aktif,
             user_input: tenure.user_input,
             tgl_input: tenure.tgl_input,
@@ -69,6 +72,8 @@ export class TenureService {
               nama_periode_jabatan: tenure.nama_periode_jabatan,
               tanggal_periode_mulai: tenure.tanggal_periode_mulai,
               tanggal_periode_selesai: tenure.tanggal_periode_selesai,
+              tanggal_periode_mulai_in_ID: dateToStrLocal(tenure.tanggal_periode_mulai),
+              tanggal_periode_selesai_in_ID: dateToStrLocal(tenure.tanggal_periode_selesai),
               flag_aktif: tenure.flag_aktif,
               user_input: tenure.user_input,
               tgl_input: tenure.tgl_input,
