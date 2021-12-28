@@ -70,12 +70,14 @@ export class UnitTypeController {
 
   @ApiHeader({ name: 'X-Member' })
   @ApiParam({ name: 'id', type: 'string' })
-  @Put(':id/status')
+  @Put(':id/active')
   @UseInterceptors(ClassSerializerInterceptor)
   async activeDeactiveUnitType(@Headers() headers: any, @Param() { id }: FindOneParams, @Body() unitType: StatusDataDto) {
     const user = headers['x-member'];
+    const findUnitType = await this.unitTypeSvc.getUnitTypeByUUID(id);
 
-    if (unitType.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    //if (unitType.flag_aktif === undefined) throw new BadRequestException('Flag aktif tidak boleh kosong.');
+    unitType.flag_aktif = findUnitType.flag_aktif === 1 ? 0 : 1;
     unitType.user_update = user;
 
     return this.unitTypeSvc.updateUnitType(id, unitType);

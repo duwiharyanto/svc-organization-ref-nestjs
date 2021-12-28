@@ -83,4 +83,8 @@ export class PositionTypeService {
     }
   }
 
+  async getPositionTypeByUUID(uuid: string) {
+    return this.positionTypeRepository.findOne({ where: { uuid: uuid }});
+  }
+
 }
