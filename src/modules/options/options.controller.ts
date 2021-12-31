@@ -19,12 +19,25 @@ export class OptionsController {
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  getAllLocation(@Headers() headers: any, @Query() query: any) {
+  getAllOptions(@Headers() headers: any, @Query() query: any) {
     const user = headers['x-member'];
 
     if (!query.kelompok) throw new BadRequestException('Kelompok wajib diisi.');
     
     return this.optionsSvc.readReference(query);
+  }
+
+  @ApiHeader({ name: 'X-Member' })
+  @ApiQuery({ name: 'cari', type: 'string', required: true, description: 'Kata kunci pencarian.' })
+  @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
+  @Get('personnel')
+  @UseInterceptors(ClassSerializerInterceptor)
+  getPersonnelOptions(@Headers() headers: any, @Query() query: any) {
+    const user = headers['x-member'];
+
+    if (!query.cari) throw new BadRequestException('Kata kunci pencarian wajib diisi.');
+    
+    return this.optionsSvc.searchPersonnel(query);
   }
 
   @ApiHeader({ name: 'X-Member' })
