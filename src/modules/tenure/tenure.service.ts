@@ -52,7 +52,7 @@ export class TenureService {
       }
       throw new TenureBadRequestException(uuid);
     } else {
-      if (args.as_references) {
+      if (args.as_references || args.as_reference) {
         const tenures = await this.tenureRepository.find({ where: { flag_aktif: 1 }});
   
         return {
