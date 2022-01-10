@@ -47,7 +47,7 @@ export class UnitTypeService {
       }
       throw new UnitTypeBadRequestException(uuid);
     } else {
-      if (args.as_references) {
+      if (args.as_references || args.as_reference) {
         const unitTypes = await this.unitTypeRepository.find({ where: { flag_aktif: 1 }});
 
         return {

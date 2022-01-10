@@ -50,7 +50,7 @@ export class LocationService {
       }
       throw new LocationBadRequestException(uuid);
     } else {
-      if (args.as_references) {
+      if (args.as_references || args.as_reference) {
         const locations = await this.locationRepository.find({ where: {flag_aktif: 1}});
         return {
           data: locations,
