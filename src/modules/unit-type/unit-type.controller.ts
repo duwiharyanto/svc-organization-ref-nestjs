@@ -20,7 +20,7 @@ export class UnitTypeController {
   @ApiHeader({ name: 'X-Member' })
   @ApiQuery({ name: 'limit', type: 'integer', required: false, description: 'Limit amount of resources' })
   @ApiQuery({ name: 'offset', type: 'integer', required: false, description: 'Offset amount of resources.' })
-  @ApiQuery({ name: 'as_references', type: 'integer', required: false, description: 'Request list as a references' })
+  @ApiQuery({ name: 'as_reference', type: 'integer', required: false, description: 'Request list as a references' })
   @ApiOkResponse({ description: 'Get many base response', type: ListResponseDto })
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
