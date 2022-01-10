@@ -31,7 +31,8 @@ spec:
         - name: svc-organization-reference-nestjs
           image: asia.gcr.io/uii-cloud-project/hcm/backend/svc-organization-reference-nestjs:stag
           imagePullPolicy: Always
-          requests:
+          resources:
+            requests:
               cpu: 100m
               memory: 100Mi
             limits:
