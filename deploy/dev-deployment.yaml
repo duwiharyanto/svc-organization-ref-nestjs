@@ -50,14 +50,12 @@ spec:
               value: "bismillah"
             - name: DATABASE_DB
               value: "hcm_organisasi"
-            - name: AWS_ACCESS_KEY_ID
+            - name: MINIO_ACCESSKEY
               value: "lmZPXbUgOtkgHa7yiTO6"
-            - name: AWS_SECRET_ACCESS_KEY
+            - name: MINIO_SECRETKEY
               value: "uwW22P4SkVTdTsIS429eI58xe0GoarShtLH0Xrqm"
-            - name: AWS_ENDPOINT
-              value: "https://s3-dev.uii.ac.id"
-            - name: AWS_ENDPOINT_UPLOAD
-              value: "https://s3-dev.uii.ac.id"
+            - name: MINIO_ENDPOINT
+              value: "s3-dev.uii.ac.id"
             - name: AWS_REGION
               value: "us-east-1"
             - name: AWS_VERSION

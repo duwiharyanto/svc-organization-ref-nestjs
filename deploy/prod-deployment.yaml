@@ -33,16 +33,31 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: 250m
-              memory: 500Mi
+              cpu: 100m
+              memory: 100Mi
             limits:
-              cpu: 500m
-              memory: 1000Mi
+              memory: 100Mi
           env:
-            - name: GCLOUD_PROJECT
-              value: "faq-1614588549731"
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/usr/src/app/service_account_credentials.json"
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "80"
+            - name: DATABASE_HOST
+              value: "dbproduction.bsi.io"
+            - name: DATABASE_PORT
+              value: "6033"
+            - name: DATABASE_USER
+              value: "hcmorganisasi_app"
+            - name: DATABASE_PASSWORD
+              value: "m6S7rnkw623XVyWrjTH8"
+            - name: DATABASE_DB
+              value: "hcm_organisasi"
+            - name: MINIO_ACCESSKEY
+              value: "AjeBhr2B5WUFFmPS9FYf"
+            - name: MINIO_SECRETKEY
+              value: "M3432ax42q377V39qGQ3Dp9N4R2w5452efY876wd"
+            - name: MINIO_ENDPOINT
+              value: "s3.uii.ac.id"
           ports:
             - name: http-api
               containerPort: 80
