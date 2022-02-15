@@ -16,10 +16,10 @@ export class UnitEntity {
   id_jenis_unit: string;
 
   @Column({ type: "varchar", length: 128 })
-  nama_lengkap_unit: string;
+  nama_unit: string;
 
   @Column({ type: "varchar", length: 128 })
-  nama_lengkap_unit_en: string;
+  nama_unit_en: string;
 
   @Column({ type: "varchar", length: 64 })
   nama_singkat_unit: string;
