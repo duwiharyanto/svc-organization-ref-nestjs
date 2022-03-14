@@ -16,4 +16,5 @@ export class CreateTenureDto {
   tanggal_periode_selesai: Date;
 
   user_input: string;
+  flag_aktif: number;
 }

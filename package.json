@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "NODE_ENV=development PORT=5300 DATABASE_HOST=dbdev.bsi.io DATABASE_PORT=6033 DATABASE_USER=dev DATABASE_PASSWORD=bismillah DATABASE_DB=hcm_organisasi MINIO_ENDPOINT='s3-dev.uii.ac.id' MINIO_ACCESSKEY=lmZPXbUgOtkgHa7yiTO6 MINIO_SECRETKEY=uwW22P4SkVTdTsIS429eI58xe0GoarShtLH0Xrqm nest start --watch",
     "start:staging": "NODE_ENV=staging PORT=5300 DATABASE_HOST=dbstaging.bsi.io DATABASE_PORT=6033 DATABASE_USER=sholichin DATABASE_PASSWORD=bismillahstaging123 DATABASE_DB=hcm_organisasi MINIO_ENDPOINT='s3-staging.uii.ac.id' MINIO_ACCESSKEY=2m8mYMxUUTwTwCqPgy2F MINIO_SECRETKEY=6yxf3LPgy4kMNLpKAACe9PzzeS5mJU8cKWA5PwVu nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "NODE_ENV=production PORT=5300 DATABASE_HOST=dbproduction.bsi.io DATABASE_PORT=6033 DATABASE_USER=hcmorganisasi_app DATABASE_PASSWORD=m6S7rnkw623XVyWrjTH8 DATABASE_DB=hcm_organisasi MINIO_ENDPOINT='s3.uii.ac.id' MINIO_ACCESSKEY=AjeBhr2B5WUFFmPS9FYf MINIO_SECRETKEY=M3432ax42q377V39qGQ3Dp9N4R2w5452efY876wd nest start --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -45,7 +45,6 @@ export class OptionsService {
 
   async searchPersonnel(query: any): Promise<any> {
     let results = [];
-    console.log(isNaN(+query.cari));
     if (isNaN(+query.cari)) {
       results = await this.personnelRepository.find({ nama: Like('%'+query.cari+'%') });
     } else {
