@@ -51,6 +51,7 @@ export class UnitTypeController {
     if (!unitType.nama_jenis_unit) throw new BadRequestException('Nama jenis unit wajib diisi.');
     if (!unitType.nama_jenis_unit_en) throw new BadRequestException('Nama jenis unit inggris wajib diisi.');
     unitType.user_input = user;
+    unitType.flag_aktif = 1;
 
     return this.unitTypeSvc.createUnitType(unitType);
   }

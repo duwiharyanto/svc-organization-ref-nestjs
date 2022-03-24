@@ -24,4 +24,5 @@ export class CreatePositionTypeDto {
   nama_singkat_jenis_jabatan_en: string;
 
   user_input: string;
+  flag_aktif: number;
 }

@@ -50,6 +50,7 @@ export class PositionTypeController {
     if (!positionType.nama_jenis_jabatan) throw new BadRequestException('Nama jenis jabatan wajib diisi.');
     if (!positionType.nama_jenis_jabatan_en) throw new BadRequestException('Nama jenis jabatan inggris wajib diisi.');
     positionType.user_input = user;
+    positionType.flag_aktif = 1;
     
     return this.positionTypeSvc.createPositionType(positionType);
   }
