@@ -8,6 +8,9 @@ export class PositionTypeEntity {
   @PrimaryColumn({ type: "bigint", unsigned: true })
   id: string;
 
+  @Column({ type: "varchar", length: 6 })
+  kd_jenis_jabatan: string;
+
   @Column({ type: "varchar", length: 128 })
   nama_jenis_jabatan: string;
 
