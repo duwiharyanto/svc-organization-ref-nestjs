@@ -14,7 +14,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('/public/api/v1/api/docs', app, document);
   
   const port = parseInt(config.get('PORT')) || 3000;
   await app.listen(port, () => {
