@@ -52,6 +52,7 @@ export class PositionTypeService {
             const positionTypeHistoryUsed = await this.officerHistoryRepository.count({ where: {id_jenis_jabatan: positionType.id}});
   
             data.push({
+              kd_jenis_jabatan: positionType.kd_jenis_jabatan,
               nama_jenis_jabatan: positionType.nama_jenis_jabatan,
               nama_jenis_jabatan_en: positionType.nama_jenis_jabatan_en,
               nama_singkat_jenis_jabatan: positionType.nama_singkat_jenis_jabatan,

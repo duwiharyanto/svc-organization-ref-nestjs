@@ -51,6 +51,7 @@ export class LocationController {
     if (location.longitude === undefined) throw new BadRequestException('Longitude wajib diisi.');
 
     location.user_input = user;
+    location.flag_aktif = 1;
 
     return this.locationSvc.createLocation(location);
   }

@@ -14,4 +14,5 @@ export class CreateUnitTypeDto {
   nama_singkat_jenis_unit_en: string;
 
   user_input: string;
+  flag_aktif: number;
 }

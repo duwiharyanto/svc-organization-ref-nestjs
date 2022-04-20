@@ -20,4 +20,5 @@ export class CreateLocationDto {
   longitude: number;
 
   user_input: string;
+  flag_aktif: number;
 }
